@@ -23,7 +23,7 @@ header {
     top:0;
     right:0;
     height:60px;
-    background-color:#d32f2f;
+    background-color:#22c55e;
     display:flex; /* none; */
     justify-content:space-between; /* flex-end; */
     align-items: center;
@@ -37,7 +37,7 @@ header h1 {
 .menu-openner {
     margin-right: 15px;
     font-size: 26px;
-    background-color: #ef9a9a;
+
     padding: 5px 20px;
     border-radius: 5px;
     cursor: pointer;
@@ -118,7 +118,7 @@ h1, h2 {
     height:50px;
     line-height:50px;
     border-radius:25px;
-    background-color:#d32f2f;
+    background-color: #22c55e;
     text-align:center;
     color:#FFF;
     font-size:22px;
@@ -128,7 +128,7 @@ h1, h2 {
 }
 
 .pizza-item a:hover .pizza-item--add {
-    background-color:#b71c1c;
+    background-color:#28cc64;
 }
 
 .pizza-item--price {
