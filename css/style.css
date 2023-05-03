@@ -97,8 +97,10 @@ h1, h2 {
     display:flex;
     flex-direction: column;
     align-items:center;
-    text-decoration: none;
+    text-decoration: none;      
 }
+      
+
 
 .pizza-item--img {
     width:200px;
