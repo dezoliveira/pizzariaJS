@@ -97,6 +97,21 @@ const escolherTamanhoPreco = (key) => {
   })
 }
 
+const mudarQuantidade = () => {
+  // Ações nos botões + e - da janela modal
+  seleciona('.pizzaInfo--qtmais').addEventListener('click', () => {
+    qtdPizzas++
+    seleciona('.pizzaInfo--qt').innerHTML = qtdPizzas
+  })
+
+  seleciona('.pizzaInfo--qtmenos').addEventListener('click', () => {
+    if(qtdPizzas > 1) {
+      qtdPizzas--
+      seleciona('.pizzaInfo--qt').innerHTML = qtdPizzas
+    }
+  })
+}
+
 pizzaJson.map((item, index) => {
 
   let pizzaItem = document.querySelector('.models .pizza-item').cloneNode(true)
@@ -130,3 +145,5 @@ pizzaJson.map((item, index) => {
 
   botoesFechar()    
 })
+
+mudarQuantidade()
