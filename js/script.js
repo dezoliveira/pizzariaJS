@@ -112,6 +112,163 @@ const mudarQuantidade = () => {
   })
 }
 
+const adicionarNoCarrinho = () => {
+  seleciona('.pizzaInfo--addButton').addEventListener('click', () => {
+    console.log('Adicinonar no carrinho')
+
+    console.log('Pizza ' + idPizza)
+
+    let size = seleciona('.pizzaInfo--size.selected').getAttribute('data-key')
+    console.log("Tamanho " + size)
+
+    console.log("Quant. " + qtdPizzas)
+
+    let price = seleciona('.pizzaInfo--actualPrice').innerHTML.replace('BLR&nbsp;', '')
+    console.log(price)
+
+    let identificador = pizzaJson[idPizza].id+'t'+size
+
+    let key = cart.findIndex((item) => item.identificador == identificador)
+    console.log(key)
+
+    if(key > -1) {
+      cart[key].qt += qtdPizzas
+    }else {
+      let pizza = {
+        identificador,
+        id: pizzaJson[idPizza].id,
+        size,
+        qt: qtdPizzas,
+        price: parseFloat(price)
+      }
+
+      cart.push(pizza)
+    }
+
+    fecharModal()
+    abrirCarrinho()
+    atualizarCarrinho()
+  })
+}
+
+const abrirCarrinho = () => {
+  if(cart.length > 0) {
+    // mostrar o carrinho
+    seleciona('aside').classList.add('show')
+    seleciona('header').style.display = 'flex'
+  }
+
+  // exibir aside do carrinho no modo mobile
+  seleciona('.menu-openner').addEventListener('click', () => {
+    if(cart.length > 0) {
+      seleciona('aside').classList.add('show')
+      seleciona('aside').style.left = '0'
+    }
+  })
+}
+
+const fecharCarrinho = () => {
+  // fechar o carrinho com o botão X no modo mobile
+  seleciona('.menu-closer').addEventListener('click', () => {
+    seleciona('aside').style.left = '100vw' // usando 100vw ele ficará fora da tela
+    seleciona('header').style.display = 'flex'
+  })
+}
+
+const atualizarCarrinho = () => {
+  // exibir número de itens no carrinho
+  seleciona('.menu-openner span').innerHTML = cart.length
+  console.log(cart.length)
+
+  // mostrar ou não o carrinho
+  if(cart.length > 0) {
+
+    //mostra o carrinho
+    seleciona('aside').classList.add('show')
+
+    //zerar meu .cart para nao fazer insercoes duplicadas
+    seleciona('.cart').innerHTML = ''
+
+    // crie as variáveis antes do for
+    let subtotal = 0
+    let desconto = 0
+    let total = 0
+
+    // calcular o subtotal para preencher o carrinho
+    for(let i in cart) {
+      // usa o find para pegar o item por id
+      let pizzaItem = pizzaJson.find((item) => item.id == cart[i].id)
+      console.log(pizzaItem)
+
+      // em cada item pegar o subtotal
+      subtotal += cart[i].price * cart[i].qt
+      console.log(cart[i].price)
+      console.log(cart[i].qt)
+      console.log(subtotal)
+
+      // fazer o clone, exibir na tela e depois preencher as informações
+      let cartItem = seleciona('.models .cart--item').cloneNode(true)
+      seleciona('.cart').append(cartItem)
+
+      let pizzaSizeName = cart[i].size
+
+      let pizzaName = `${pizzaItem.name} (${pizzaSizeName})`
+
+      // preencher as informações
+      cartItem.querySelector('img').src = pizzaItem.img
+      cartItem.querySelector('.cart--item-nome').innerHTML = pizzaName
+      cartItem.querySelector('.cart--item--qt').innerHTML = cart[i].qt
+
+      // selecionar botões + e -
+      cartItem.querySelector('.cart--item-qtmais').addEventListener('click', () => {
+        console.log('clicou no botão mais')
+
+        cart[i].qt ++
+
+        atualizarCarrinho()
+      })
+
+      cartItem.querySelector('.cart--item-qtmenos').addEventListener('click', () => {
+        console.log('clicou no botão menos')
+        if(cart[i].qt > 1) {
+          cart[i].qt --
+        }else {
+          cart.splice(i, 1)
+        }
+
+        (cart.length < 1) ? seleciona('header').style.display = 'flex' : ''
+
+        // atualizar a quantidade
+        atualizarCarrinho()
+      })
+
+      seleciona('.cart').append(cartItem)
+    }
+
+    desconto = subtotal * 0
+    total = subtotal - desconto
+
+    //preenchimento dos dados na tela
+    seleciona('.subtotal span:last-child').innerHTML = formatoReal(subtotal)
+    seleciona('.desconto span:last-child').innerHTML = formatoReal(desconto)
+    seleciona('.total span:last-child').innerHTML = formatoReal(total)
+
+  } else {
+    //ocultar carrinho
+    seleciona('aside').classList.remove('show')
+    seleciona('aside').style.left = '100vw'
+  }
+  
+}
+
+const finalizarCompra = () => {
+  seleciona('.cart--finalizar').addEventListener('click', () => {
+    seleciona('aside').classList.remove('show')
+    seleciona('aside').style.left = '100vw'
+    seleciona('header').style.display = 'flex'
+  })
+}
+
 pizzaJson.map((item, index) => {
 
   let pizzaItem = document.querySelector('.models .pizza-item').cloneNode(true)
@@ -147,3 +304,8 @@ pizzaJson.map((item, index) => {
 })
 
 mudarQuantidade()
+
+adicionarNoCarrinho()
+atualizarCarrinho()
+fecharCarrinho()
+finalizarCompra()
